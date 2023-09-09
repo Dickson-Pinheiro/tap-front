@@ -4,15 +4,19 @@ import { useEffect, useState } from "react";
 import Note from "../components/Note";
 import AddNode from "../components/AddNode";
 import { InfinitySpin } from "react-loader-spinner";
+import { toast } from "react-toastify";
 export default function Home(){
     const [notes, setNotes] = useState()
     const [updateNotes, setUpdateNotes] = useState(false);
     const { getNotes } = noteService();
     useEffect(() => {
         async function notesResult(){
-            const result = await getNotes();
-            console.log(result.data.notes)
-            setNotes(result.data.notes);
+            try {
+                const result = await getNotes();
+                setNotes(result.data.notes);
+            } catch (error) {
+                toast("Sua sessão expirou.")
+            }
         }
         notesResult();
     }, [updateNotes])

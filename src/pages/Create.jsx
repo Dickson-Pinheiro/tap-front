@@ -3,6 +3,7 @@ import {BsFillArrowLeftCircleFill} from 'react-icons/bs'
 import { styled } from "styled-components"
 import { noteService } from "../services/notesService";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function Create(){
     const [content, setContent] = useState();
@@ -23,14 +24,18 @@ export default function Create(){
         if(!content){
             return
         }
-        await createNotes(content)
-        navigate("/")
+        try {
+            await createNotes(content)
+            navigate("/notes/home")   
+        } catch (error) {
+            toast("Sua sessão expirou.")
+        }
     }
 
     return(
         <ContainerCreate>
             <BackContainer>
-                <BackButton onClick={() => navigate("/")}>
+                <BackButton onClick={() => navigate("/notes/home")}>
                     <BsFillArrowLeftCircleFill />
                 </BackButton>
             </BackContainer>

@@ -5,6 +5,13 @@ export const Global = createGlobalStyle`
    v2.0 | 20110126
    License: none (public domain)
 */
+.Toastify__toast-theme--dark {
+	background-color: #5f4133;;
+}
+
+.Toastify__progress-bar {
+	background-color: #ffffff;
+}
 
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,

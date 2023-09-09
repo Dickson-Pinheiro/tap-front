@@ -3,6 +3,7 @@ import {BsFillArrowLeftCircleFill} from 'react-icons/bs'
 import { styled } from "styled-components"
 import { noteService } from "../services/notesService";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function Edit(){
     const [content, setContent] = useState();
@@ -13,9 +14,12 @@ export default function Edit(){
 
     useEffect(() => {
         async function getOne(){
-            const result = await getOneNote(id);
-            console.log(result.data);
-            setContent(result.data.note.Content);
+            try {
+                const result = await getOneNote(id);
+                setContent(result.data.note.Content);   
+            } catch (error) {
+                toast("Sua sessão expirou.")   
+            }
         }
         getOne();
     }, [])
@@ -46,7 +50,7 @@ export default function Edit(){
     return(
         <ContainerCreate>
             <BackContainer>
-                <BackButton onClick={() => navigate("/")}>
+                <BackButton onClick={() => navigate("/notes/home")}>
                     <BsFillArrowLeftCircleFill />
                 </BackButton>
             </BackContainer>

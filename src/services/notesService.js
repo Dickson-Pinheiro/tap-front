@@ -2,10 +2,14 @@ import axios from 'axios';
 
 
 export function noteService(){
-
+    const token = localStorage.getItem("token");
     const api = axios.create({
-        baseURL: import.meta.env.VITE_API_URL
-    })
+        baseURL: import.meta.env.VITE_API_URL,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    },
+    )
     const services = {
         async getNotes(){
             const notes = await api.get("/notes");

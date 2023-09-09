@@ -4,7 +4,7 @@ export default function AddNode(){
     const navigate = useNavigate();
 
     function createNote(){
-        navigate("/create");
+        navigate("/notes/create");
     }
 
     return(
