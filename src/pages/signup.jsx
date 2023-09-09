@@ -39,7 +39,7 @@ export default function Signup() {
                 <button type='submit'>Entrar</button>
             </Form>
             <ContainerSignupLink>
-                <p>Jpa possui uma conta? <Link to="/">Faça login aqui</Link></p>
+                <p>Já possui uma conta? <Link to="/">Faça login aqui</Link></p>
             </ContainerSignupLink>
         </ContainerLogin>
     )
