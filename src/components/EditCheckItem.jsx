@@ -3,16 +3,13 @@ import { listsService } from "../services/listsService"
 import { toast } from "react-toastify"
 import styled from "styled-components"
 
-export default function EditCheckItem({content, checked, setItems, items, title, id}){
+export default function EditCheckItem({content, checked, items, title, id, update, setUpdate}){
     const [contentItem, setContentItem] = useState(content)
     const { updateList } = listsService()
-    const [done, setDone] = useState(checked)
     const [editable, setEditable] = useState(false)
 
     function editableItem(e){
-        if(e.detail === 2){
             setEditable(true)
-        }
     }
 
     async function submitItem(e){
@@ -40,27 +37,38 @@ export default function EditCheckItem({content, checked, setItems, items, title,
             }
             return item;
         })
-        await updateList({list: newItems, title}, id);
+        try {
+            await updateList({list: newItems, title}, id);
+            setUpdate(!update);
+        } catch (error) {
+            console.log("Deu algo errado")
+        }
+        
     }
 
     async function updateDone(){
         const newItems = items.map(item => {
             if(item.content === content){
-                return {
+                const newItem = {
                     content: item.content,
                     done: !item.done
                 }
+                return newItem
             }
             return item;
         })
-        await updateList({items: newItems, title}, id);
-        setDone(!done);
+        try {
+            await updateList({items: newItems, title}, id);
+            setUpdate(!update);
+        } catch (error) {
+         console.log(error);   
+        }
     }
 
     return(
-        <CheckItemContainer done={done}>
-            <input type="checkbox" checked={done} onClick={updateDone}/>
-            {editable ? <form onSubmit={submitItem}><input type="text" value={contentItem} onChange={(e) => setContentItem(e.target.value)} onBlur={submitItem}/></form> : <p onClick={editableItem}>{contentItem}</p>}
+        <CheckItemContainer done={checked}>
+            <input type="checkbox" checked={checked} onClick={updateDone}/>
+            {editable ? <form onSubmit={submitItem}><input type="text" value={contentItem} autoFocus onChange={(e) => setContentItem(e.target.value)} onBlur={submitItem}/></form> : <p onClick={editableItem}>{contentItem}</p>}
         </CheckItemContainer>
     )
 }

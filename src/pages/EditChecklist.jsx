@@ -24,9 +24,7 @@ export default function EditChecklist(){
     }, [update])
 
     function edit(e){
-        if(e.detail == 2){
             setEditable(true);
-        }
     }
 
     async function submitTitle(e){
@@ -40,6 +38,7 @@ export default function EditChecklist(){
         }
         try {
             await updateList({...list, title: title}, id);
+            console.log("cadastrou")
             setUpdate(!update);
             setEditable(false);
             console.log("deu certo")   
@@ -51,9 +50,9 @@ export default function EditChecklist(){
     return(
         <EditChecklistContainer>
             <Container>
-                {editable ? <form onSubmit={submitTitle}><input type="text" value={title} onChange={e => setTitle(e.target.value)} onBlur={submitTitle} /></form> : <h1 onClick={edit}>{title}</h1>}
+                {editable ? <form onSubmit={submitTitle}><input type="text" value={title} autoFocus onChange={e => setTitle(e.target.value)} onBlur={submitTitle} /></form> : <h1 onClick={edit}>{title}</h1>}
                 <ContainerCheckItems>
-                    {list?.items.map(item => <EditCheckItem content={item.content} checked={item.done} items={list.items} id={id} key={item.content} title={list.title}/>)}
+                    {list?.items.map(item => <EditCheckItem content={item.content} checked={item.done} items={list.items} id={id} key={item.content} title={list.title} update={update} setUpdate={setUpdate}/>)}
                     <EditAddCheckItem items={list?.items} title={list?.title} id={id} update={update} setUpdate={setUpdate}/>
                 </ContainerCheckItems>
             </Container>
