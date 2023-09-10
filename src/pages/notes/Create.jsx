@@ -1,28 +1,15 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import {BsFillArrowLeftCircleFill} from 'react-icons/bs'
 import { styled } from "styled-components"
-import { noteService } from "../services/notesService";
-import { useNavigate, useParams } from "react-router-dom";
+import { noteService } from "../../services/notesService";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-export default function Edit(){
+export default function Create(){
     const [content, setContent] = useState();
     const [change, setChange] = useState(false);
-    const { updateNote, getOneNote } = noteService()
+    const { createNotes } = noteService()
     const navigate = useNavigate()
-    const { id } = useParams();
-
-    useEffect(() => {
-        async function getOne(){
-            try {
-                const result = await getOneNote(id);
-                setContent(result.data.note.Content);   
-            } catch (error) {
-                toast("Sua sessão expirou.")   
-            }
-        }
-        getOne();
-    }, [])
 
     function changeNotes(e){
         setContent(e.target.value);
@@ -34,30 +21,27 @@ export default function Edit(){
     }
 
     async function handleNotes(){
-        if(!change){
+        if(!content){
             return
         }
-        await updateNote(content, id);
-        setChange(false);
-    }
-
-    async function backContentNote(){
-        const result = await getOneNote(id);
-        setContent(result.data.note.Content);
-        setChange(false);
+        try {
+            await createNotes(content)
+            navigate("/dash/notes")   
+        } catch (error) {
+            toast("Sua sessão expirou.")
+        }
     }
 
     return(
         <ContainerCreate>
             <BackContainer>
-                <BackButton onClick={() => navigate("/notes/home")}>
+                <BackButton onClick={() => navigate("/dash/notes")}>
                     <BsFillArrowLeftCircleFill />
                 </BackButton>
             </BackContainer>
             <ContentCreate>
                 <ContainerButtons>
-                <SaveButton change={change} onClick={backContentNote}>Desfazer</SaveButton>
-                <SaveButton change={change} onClick={handleNotes}>Salvar</SaveButton>
+                    <SaveButton change={change} onClick={handleNotes}>Salvar</SaveButton>
                 </ContainerButtons>
                 <TextContent onChange={changeNotes} value={content}>
                 </TextContent>
@@ -80,6 +64,7 @@ const BackContainer = styled.div`
     max-width: 920px;
     width: 100%;
 `
+
 const BackButton = styled.div`
     width: 30px;
     font-size: 32px;
@@ -96,23 +81,29 @@ const BackButton = styled.div`
 
 const ContentCreate = styled.div`
     position: relative;
+    border-radius: 8px;
     max-width: 920px;
     width: 100%;
-    border-radius: 8px;
     height: 70vh;
     background-color: #5f4133;
     padding: 12px;
 `
 
+const Controls = styled.div`
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+`
+
 const SaveButton = styled.button`
-    background: none;
     border: none;
     color: white;
     padding: 8px;
+    background: none;
+    font-family: 'Rubik', sans-serif;
     font-weight: bold;
     font-size: 18px;
     opacity: ${props => props.change ? 1 : 0.5};
-    font-family: 'Rubik', sans-serif;
     transition: 200ms;
     cursor: pointer;
 `
@@ -135,6 +126,9 @@ const TextContent = styled.textarea`
     line-height: 24px;
     font-size: 18px;
     font-family: 'Lora', serif;
+    font-weight: 600;
+    line-height: 24px;
+    font-size: 18px;
     font-weight: 600;
     color: white;
     &::-webkit-scrollbar {

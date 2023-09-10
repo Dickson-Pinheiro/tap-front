@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import { noteService } from "../services/notesService";
+import { noteService } from "../../services/notesService";
 import { useEffect, useState } from "react";
-import Note from "../components/Note";
-import AddNode from "../components/AddNode";
+import Note from "../../components/Note";
+import AddNode from "../../components/AddNode";
 import { InfinitySpin } from "react-loader-spinner";
 import { toast } from "react-toastify";
-export default function Home(){
+export default function Notes(){
     const [notes, setNotes] = useState()
     const [updateNotes, setUpdateNotes] = useState(false);
     const { getNotes } = noteService();
@@ -35,7 +35,7 @@ export default function Home(){
             <ContainerNotes>
                 {notes?.map(note => <Note key={note?._id} content={note.note?.Content} id={note?._id} setUpdateNotes={setUpdateNotes} updateNotes={updateNotes}/>).reverse()}
             </ContainerNotes>
-            <AddNode/>
+            <AddNode path="/dash/notes/create"/>
         </ContainerHome>
     )
 }
@@ -61,6 +61,7 @@ const ContainerNotes = styled.div`
     gap: 8px;
     align-items: center;
     flex-wrap: wrap;
+    overflow: hidden;
     @media(max-width: 800px){
         justify-content: center;
     }
@@ -74,21 +75,4 @@ const NoContent = styled.div`
         color: #5f4133;
         margin-top: 30px;
     }
-`
-
-const CreateNote = styled.div`
-    position: fixed;
-    width: 90px;
-    height: 90px;
-    cursor: pointer;
-    right: 20px;
-    bottom: 30px;
-    border-radius: 50%;
-    background-color: #48ff00;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 30px;
-    font-weight: bold;
 `

@@ -15,6 +15,12 @@ export function authService(){
                 user
             })
             localStorage.setItem("token", result.data.token)
+        },
+
+        async authVerify(token){
+            return api.post('/auth/verify', {
+                token
+            })
         }
     }
     return services;

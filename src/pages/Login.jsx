@@ -1,20 +1,34 @@
 import styled from 'styled-components';
 import { authService } from '../services/authService';
 import { toast } from 'react-toastify';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 export default function Login() {
-    const { signin } = authService();
+    const { signin, authVerify } = authService();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate()
+
+    useEffect(() => {
+        async function verifyToken(){
+            const token = localStorage.getItem("token");
+            if(!token){
+                return
+            }
+            const result = await authVerify(token);
+            if(result.data.valid){
+                navigate("/dash");
+            }
+        }
+        verifyToken();
+    })
 
     async function loginSubmit(e){
         e.preventDefault();
         try {
             await signin({email, password})
-            navigate('/notes/home');
+            navigate('/dash');
         } catch (error) {
             toast('e-mail ou senha incorretos.')
         }

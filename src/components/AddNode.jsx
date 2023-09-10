@@ -1,27 +1,20 @@
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-export default function AddNode(){
+
+export default function AddNode({path}){
     const navigate = useNavigate();
 
-    function createNote(){
-        navigate("/notes/create");
+    function create(){
+        navigate(path);
     }
 
     return(
-        <ContainerAddNote onClick={createNote}>
+        <ContainerAddNote onClick={create}>
             +
         </ContainerAddNote>
         
     )
 }
-
-const Container = styled.div`
-    width: 250px;
-    height: 220px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-`
 
 const ContainerAddNote = styled.div`
     position: fixed;

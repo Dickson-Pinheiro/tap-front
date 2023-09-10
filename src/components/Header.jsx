@@ -14,7 +14,7 @@ export default function Header(){
     return(
         <HeaderContainer>
             <Container>
-            <h1>NOTAS</h1>
+            <h1 onClick={() => navigate('/dash')}>NOTAS</h1>
             <Logout>
                 <p onClick={handleLogout}>Sair</p>
             </Logout>
@@ -36,6 +36,7 @@ const HeaderContainer = styled.div`
         font-size: 20px;
         font-weight: 500;
         color: white;
+        cursor: pointer;
     }
 `
 

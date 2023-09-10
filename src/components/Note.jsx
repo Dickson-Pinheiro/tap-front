@@ -8,7 +8,7 @@ export default function Note({content, id, setUpdateNotes, updateNotes}){
     const navigate = useNavigate();
 
     function handleNote(){
-        navigate(`/notes/edit/${id}`); 
+        navigate(`/dash/notes/edit/${id}`); 
     }
 
     function removeNote(){
