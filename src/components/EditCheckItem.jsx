@@ -2,11 +2,13 @@ import { useState } from "react"
 import { listsService } from "../services/listsService"
 import { toast } from "react-toastify"
 import styled from "styled-components"
+import { useNavigate } from "react-router-dom"
 
 export default function EditCheckItem({content, checked, items, title, id, update, setUpdate}){
     const [contentItem, setContentItem] = useState(content)
     const { updateList } = listsService()
     const [editable, setEditable] = useState(false)
+    const navigate = useNavigate()
 
     function editableItem(e){
             setEditable(true)
@@ -38,10 +40,11 @@ export default function EditCheckItem({content, checked, items, title, id, updat
             return item;
         })
         try {
-            await updateList({list: newItems, title}, id);
+            await updateList({items: newItems, title}, id);
             setUpdate(!update);
         } catch (error) {
-            console.log("Deu algo errado")
+            toast("Sua sessão expirou.");
+            navigate("/");
         }
         
     }
@@ -61,7 +64,8 @@ export default function EditCheckItem({content, checked, items, title, id, updat
             await updateList({items: newItems, title}, id);
             setUpdate(!update);
         } catch (error) {
-         console.log(error);   
+            toast("Sua sessão expirou.");
+            navigate("/");   
         }
     }
 

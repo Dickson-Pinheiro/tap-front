@@ -2,19 +2,24 @@ import { BsTrash3Fill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { listsService } from "../services/listsService";
 import styled from "styled-components";
+import { toast } from "react-toastify";
 
 export default function CheckBox({title, id, updateLists, setUpdateLists}){
     const navigate = useNavigate()
     const { removeList } = listsService()
     
     async function edit(){
-        console.log(id);
         navigate(`/dash/checklists/edit/${id}`)
     }
 
     async function removeCheckList(){
-        await removeList(id)
+        try {
+            await removeList(id)
         setUpdateLists(!updateLists)
+        } catch (error) {
+            toast("Sua sessão expirou.")
+            navigate("/")
+        }
     }
 
     return(

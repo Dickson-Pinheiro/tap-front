@@ -2,11 +2,13 @@ import { useState } from "react";
 import { listsService } from "../services/listsService";
 import { toast } from "react-toastify";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 export default function EditAddCheckItem({items, title, id, update, setUpdate}){
     const { updateList } = listsService(); 
     const [addContent, setAddContent] = useState(false);
     const [newContent, setNewContent] = useState("");
+    const navigate = useNavigate();
 
     function add(){
         setAddContent(true)
@@ -35,10 +37,15 @@ export default function EditAddCheckItem({items, title, id, update, setUpdate}){
         }
         const newItem = {content: newContent, done: false};
         const newItems = [...items, newItem];
-        await updateList({items: newItems, title: title}, id);
-        setUpdate(!update);
-        setNewContent("");
-        setAddContent(false);
+        try {
+            await updateList({items: newItems, title: title}, id);
+            setUpdate(!update);
+            setNewContent("");
+            setAddContent(false);
+        } catch (error) {
+            toast("Sua sessão expirou.");
+            navigate("/");
+        }
     }
 
     return(

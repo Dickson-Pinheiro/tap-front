@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { listsService } from "../services/listsService";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import EditCheckItem from "../components/EditCheckItem";
 import EditAddCheckItem from "../components/EditAddCheckItem";
@@ -12,23 +12,27 @@ export default function EditChecklist(){
     const [title, setTitle] = useState("");
     const [update, setUpdate] = useState(false);
     const { id } = useParams();
+    const navigate = useNavigate()
     const [editable, setEditable] = useState(false);
     useEffect(() => {
         async function getList(){
-            const result = await getOneList(id);
-            console.log(result.data.list);
-            setList(result.data.list);
-            setTitle(result.data.list.title)
+            try {
+                const result = await getOneList(id);
+                setList(result.data.list);
+                setTitle(result.data.list.title);
+            } catch (error) {
+                navigate("/")
+            }
         }
         getList();
     }, [update])
 
     function edit(e){
-            setEditable(true);
+        setEditable(true);
     }
 
     async function submitTitle(e){
-        e.preventDefault()
+        e.preventDefault();
         setEditable(false);
         if(!title){
             return
@@ -38,12 +42,11 @@ export default function EditChecklist(){
         }
         try {
             await updateList({...list, title: title}, id);
-            console.log("cadastrou")
             setUpdate(!update);
-            setEditable(false);
-            console.log("deu certo")   
+            setEditable(false);  
         } catch (error) {
-            toast("não fosse possível atualizar o título.");
+            toast("Sua sessão expirou.");
+            navigate("/");
         }
     }
 
@@ -52,7 +55,9 @@ export default function EditChecklist(){
             <Container>
                 {editable ? <form onSubmit={submitTitle}><input type="text" value={title} autoFocus onChange={e => setTitle(e.target.value)} onBlur={submitTitle} /></form> : <h1 onClick={edit}>{title}</h1>}
                 <ContainerCheckItems>
-                    {list?.items.map(item => <EditCheckItem content={item.content} checked={item.done} items={list.items} id={id} key={item.content} title={list.title} update={update} setUpdate={setUpdate}/>)}
+                    {list?.items.map(item => {
+                        console.log(item)
+                    return <EditCheckItem content={item.content} checked={item.done} items={list?.items} id={id} key={item.content} title={list?.title} update={update} setUpdate={setUpdate}/>})}
                     <EditAddCheckItem items={list?.items} title={list?.title} id={id} update={update} setUpdate={setUpdate}/>
                 </ContainerCheckItems>
             </Container>
