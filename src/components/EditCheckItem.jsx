@@ -28,6 +28,7 @@ export default function EditCheckItem({content, checked, items, title, id, updat
             }
         })
         if(addedItem){
+            setContentItem(content)
             toast("Este item já foi adicionado.")
             return
         }
