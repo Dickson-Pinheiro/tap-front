@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom"
 
 export default function EditCheckItem({content, checked, items, title, id, update, setUpdate}){
     const [contentItem, setContentItem] = useState(content)
+    const [check, setCheck] = useState(checked)
     const { updateList } = listsService()
     const [editable, setEditable] = useState(false)
     const navigate = useNavigate()
@@ -45,6 +46,7 @@ export default function EditCheckItem({content, checked, items, title, id, updat
         } catch (error) {
             toast("Sua sessão expirou.");
             navigate("/");
+            
         }
         
     }
@@ -70,8 +72,8 @@ export default function EditCheckItem({content, checked, items, title, id, updat
     }
 
     return(
-        <CheckItemContainer done={checked}>
-            <input type="checkbox" checked={checked} onClick={updateDone}/>
+        <CheckItemContainer done={check}>
+            <input type="checkbox" checked={check} onClick={updateDone} onChange={() => setCheck(!check)}/>
             {editable ? <form onSubmit={submitItem}><input type="text" value={contentItem} autoFocus onChange={(e) => setContentItem(e.target.value)} onBlur={submitItem}/></form> : <p onClick={editableItem}>{contentItem}</p>}
         </CheckItemContainer>
     )
