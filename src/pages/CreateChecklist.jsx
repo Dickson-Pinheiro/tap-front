@@ -30,9 +30,7 @@ export default function CreateChecklist(){
     const [editable, setEditable] = useState(true);
 
     function editTitle(e){
-        if(e.detail === 2){
-            setEditable(true)
-        }
+        setEditable(true)
     }
 
     function submitInputTitle(e){

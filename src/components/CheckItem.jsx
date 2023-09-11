@@ -8,9 +8,7 @@ export default function CheckItem({content, checked, setItems, items}){
     const [editable, setEditable] = useState(false)
 
     function editableItem(e){
-        if(e.detail === 2){
-            setEditable(true)
-        }
+        setEditable(true)
     }
 
     function submitItem(e){
@@ -59,7 +57,7 @@ export default function CheckItem({content, checked, setItems, items}){
     return(
         <CheckItemContainer done={done}>
             <input type="checkbox" checked={done} onClick={updateDone}/>
-            {editable ? <form onSubmit={submitItem}><input type="text" value={contentItem} onChange={(e) => setContentItem(e.target.value)} onBlur={submitItem}/></form> : <p onClick={editableItem}>{contentItem}</p>}
+            {editable ? <form onSubmit={submitItem}><input type="text" value={contentItem} autoFocus onChange={(e) => setContentItem(e.target.value)} onBlur={submitItem}/></form> : <p onClick={editableItem}>{contentItem}</p>}
         </CheckItemContainer>
     )
 }
