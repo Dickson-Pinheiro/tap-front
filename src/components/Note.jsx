@@ -11,9 +11,13 @@ export default function Note({content, id, setUpdateNotes, updateNotes}){
         navigate(`/dash/notes/edit/${id}`); 
     }
 
-    function removeNote(){
-        deleteNote(id);
-        setUpdateNotes(!updateNotes); 
+    async function removeNote(){
+        try {
+            await deleteNote(id);
+            setUpdateNotes(!updateNotes);
+        } catch (error) {
+            console.log("Não excluiu")
+        } 
     }
 
     return (
