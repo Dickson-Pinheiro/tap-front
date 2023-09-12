@@ -3,16 +3,20 @@ import { useNavigate } from "react-router-dom";
 import { listsService } from "../services/listsService";
 import styled from "styled-components";
 import { toast } from "react-toastify";
+import { useState } from "react";
+import { Oval } from "react-loader-spinner";
 
 export default function CheckBox({title, id, updateLists, setUpdateLists}){
     const navigate = useNavigate()
     const { removeList } = listsService()
+    const [load, setLoad] = useState(false);
     
     async function edit(){
         navigate(`/dash/checklists/edit/${id}`)
     }
 
     async function removeCheckList(){
+
         try {
             await removeList(id)
         setUpdateLists(!updateLists)
@@ -25,7 +29,7 @@ export default function CheckBox({title, id, updateLists, setUpdateLists}){
     return(
         <Container>
             <span onClick={removeCheckList}>
-                <BsTrash3Fill />
+                {load ? <Oval color="#ffffff"/> :<BsTrash3Fill />}
             </span>
         <CheckBoxContainer onClick={edit}>
             <p>{title}</p>
