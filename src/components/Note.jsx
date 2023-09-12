@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { BsTrash3Fill } from 'react-icons/bs';
 import { noteService } from "../services/notesService";
 import { Oval } from "react-loader-spinner";
+import { useState } from "react";
 
 export default function Note({content, id, setUpdateNotes, updateNotes}){
     const { deleteNote } = noteService();
