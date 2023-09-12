@@ -67,6 +67,7 @@ const CheckBoxContainer = styled.div`
     color: #ffffff;
     display: flex;
     justify-content: center;
+    padding: 8px;
     align-items: center;
     &:hover {
         background-color: #703e27;
