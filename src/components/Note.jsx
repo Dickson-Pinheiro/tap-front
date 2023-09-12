@@ -2,20 +2,25 @@ import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import { BsTrash3Fill } from 'react-icons/bs';
 import { noteService } from "../services/notesService";
+import { Oval } from "react-loader-spinner";
 
 export default function Note({content, id, setUpdateNotes, updateNotes}){
     const { deleteNote } = noteService();
     const navigate = useNavigate();
+    const [load, setLoad] = useState(false);
 
     function handleNote(){
         navigate(`/dash/notes/edit/${id}`); 
     }
 
     async function removeNote(){
+        setLoad(true);
         try {
             await deleteNote(id);
             setUpdateNotes(!updateNotes);
+            setLoad(false);
         } catch (error) {
+            setLoad(false);
             console.log("Não excluiu")
         } 
     }
@@ -23,7 +28,7 @@ export default function Note({content, id, setUpdateNotes, updateNotes}){
     return (
         <Container>
             <span onClick={removeNote}>
-                <BsTrash3Fill />
+            {load ? <Oval color="#ffffff"/> :<BsTrash3Fill />}
             </span>
         <ContainerNote onClick={handleNote}>
             <p>{content.substring(0, 120) + "..."}</p>

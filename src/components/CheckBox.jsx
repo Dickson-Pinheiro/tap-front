@@ -16,11 +16,13 @@ export default function CheckBox({title, id, updateLists, setUpdateLists}){
     }
 
     async function removeCheckList(){
-
+        setLoad(true);
         try {
             await removeList(id)
+            setLoad(false);
         setUpdateLists(!updateLists)
         } catch (error) {
+            setLoad(false);
             toast("Sua sessão expirou.")
             navigate("/")
         }
