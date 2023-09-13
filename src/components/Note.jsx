@@ -11,6 +11,7 @@ export default function Note({content, id, setUpdateNotes, updateNotes}){
     const [load, setLoad] = useState(false);
 
     function handleNote(){
+        if(load) return;
         navigate(`/dash/notes/edit/${id}`); 
     }
 
@@ -19,7 +20,6 @@ export default function Note({content, id, setUpdateNotes, updateNotes}){
         try {
             await deleteNote(id);
             setUpdateNotes(!updateNotes);
-            setLoad(false);
         } catch (error) {
             setLoad(false);
             console.log("Não excluiu")
@@ -28,8 +28,8 @@ export default function Note({content, id, setUpdateNotes, updateNotes}){
 
     return (
         <Container>
-            <span onClick={removeNote}>
-            {load ? <Oval color="#ffffff"/> :<BsTrash3Fill />}
+            <span >
+                {load ? <Oval width={15} height={15} color="#ffffff"S secondaryColor="#703e27"/> :<BsTrash3Fill onClick={removeNote}/>}
             </span>
         <ContainerNote onClick={handleNote}>
             <p>{content.substring(0, 120) + "..."}</p>

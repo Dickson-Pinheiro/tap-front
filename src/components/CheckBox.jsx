@@ -12,6 +12,9 @@ export default function CheckBox({title, id, updateLists, setUpdateLists}){
     const [load, setLoad] = useState(false);
     
     async function edit(){
+        if(load){
+            return
+        }
         navigate(`/dash/checklists/edit/${id}`)
     }
 
@@ -19,8 +22,7 @@ export default function CheckBox({title, id, updateLists, setUpdateLists}){
         setLoad(true);
         try {
             await removeList(id)
-            setLoad(false);
-        setUpdateLists(!updateLists)
+            setUpdateLists(!updateLists)
         } catch (error) {
             setLoad(false);
             toast("Sua sessão expirou.")
@@ -30,8 +32,8 @@ export default function CheckBox({title, id, updateLists, setUpdateLists}){
 
     return(
         <Container>
-            <span onClick={removeCheckList}>
-                {load ? <Oval color="#ffffff"/> :<BsTrash3Fill />}
+            <span >
+                {load ? <Oval width={15} height={15} color="#ffffff" secondaryColor="#703e27"/> :<BsTrash3Fill onClick={removeCheckList}/>}
             </span>
         <CheckBoxContainer onClick={edit}>
             <p>{title}</p>
@@ -50,6 +52,9 @@ const Container = styled.div`
         visibility: hidden;
         z-index: 3;
         cursor: pointer;
+        svg {
+            color: #ffffff;
+        }
     }
     &:hover {
         span {
