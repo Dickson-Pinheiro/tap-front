@@ -14,6 +14,7 @@ export default function EditChecklist(){
     const { id } = useParams();
     const navigate = useNavigate()
     const [editable, setEditable] = useState(false);
+    
     useEffect(() => {
         async function getList(){
             try {

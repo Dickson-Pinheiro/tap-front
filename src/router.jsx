@@ -10,6 +10,7 @@ import Dash from "./pages/Dash";
 import Checklists from "./pages/Checklists";
 import CreateChecklist from "./pages/CreateChecklist";
 import EditChecklist from "./pages/EditChecklist";
+import Accordions from "./pages/Accordions";
 
 export default function Router(){
     return(
@@ -27,6 +28,7 @@ export default function Router(){
                     <Route path="notes" element={<Notes />} />
                     <Route path="notes/create" element={<Create />} />
                     <Route path="notes/edit/:id" element={<Edit />} />
+                    <Route path="accordions" element={<Accordions/>} />
                 </Route>
             </Routes>
         </BrowserRouter>
