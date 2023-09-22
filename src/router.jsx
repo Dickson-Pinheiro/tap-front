@@ -23,7 +23,7 @@ export default function Router(){
                 </Route>
                 <Route path="/dash" element={<Principal />}>
                     <Route path="/dash" element={<Dash/>} />
-                    <Route path="block" element={<Blocks />} /> 
+                    <Route path="pages" element={<Blocks />} /> 
                     <Route path="checklists" element={<Checklists />} />
                     <Route path="checklists/create" element={<CreateChecklist />} />
                     <Route path="checklists/edit/:id" element={<EditChecklist />} />

@@ -12,8 +12,8 @@ export default function Dash(){
                 <Button onClick={ () => navigate('/dash/checklists')}>
                     checklists
                 </Button>
-                <Button onClick={ () => navigate('/dash/accordions')}>
-                    Accordions
+                <Button onClick={ () => navigate('/dash/pages')}>
+                    pages
                 </Button>       
             </Container>
         </ContainerDash>
