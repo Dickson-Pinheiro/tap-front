@@ -12,7 +12,7 @@ export default function EditChecklist(){
     const [title, setTitle] = useState("");
     const [update, setUpdate] = useState(false);
     const { id } = useParams();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const [editable, setEditable] = useState(false);
     
     useEffect(() => {
