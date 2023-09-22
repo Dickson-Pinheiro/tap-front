@@ -1,9 +1,10 @@
 import styled from "styled-components"
 
-export default function BlockItem({block, setSelectedBlock}){
+export default function BlockItem({block, setSelectedBlock, setUpdateBlocks, updateBlocks}){
     
     function handleBlock(){
         setSelectedBlock(block);
+        setUpdateBlocks(!updateBlocks)
     }
 
     return(

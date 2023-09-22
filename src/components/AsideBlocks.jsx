@@ -32,7 +32,7 @@ export default function AsideBlocks({blocksITems, updateBlocks, setUpdateBlocks,
             {
             blocksITems?.map(item => {
                 console.log("item ->",  item);
-            return <BlockItem block={item}  key={item._id} setSelectedBlock={setSelectedBlock}/>})
+            return <BlockItem block={item}  key={item._id} setSelectedBlock={setSelectedBlock} setUpdateBlocks={setUpdateBlocks} updateBlocks={updateBlocks}/>})
             }
 
             {
