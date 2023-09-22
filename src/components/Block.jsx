@@ -16,7 +16,7 @@ export default function Block({selectedBlock, updateBlocks, setUpdateBlocks}){
       if (ejInstance.current === null) {
         initEditor();
       }
-  
+      setUpdateBlocks(!updateBlocks)
       return () => {
         ejInstance?.current?.destroy();
         ejInstance.current = null;
