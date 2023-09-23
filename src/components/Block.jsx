@@ -3,7 +3,8 @@ import { useEffect, useRef } from 'react';
 import Header from 'editorjs-header-with-alignment'
 import Paragraph from 'editorjs-paragraph-with-alignment';
 import NestedList from '@editorjs/nested-list';
-import SimpleImage from '@editorjs/simple-image'
+import SimpleImage from '@editorjs/simple-image';
+import Embed from '@editorjs/embed';
 import styled from 'styled-components';
 import { blocksService } from '../services/blocksService';
 
@@ -57,6 +58,16 @@ export default function Block({selectedBlock, updateBlocks, setUpdateBlocks}){
               config: {
                 defaultStyle: 'unordered'
               },
+            },
+            embed: {
+              class: Embed,
+              inlineToolbar: true,
+              config: {
+                services: {
+                  youtube: true,
+                  coub: true
+                }
+              }
             },
             },
          }
