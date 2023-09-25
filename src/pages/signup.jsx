@@ -23,24 +23,25 @@ export default function Signup() {
 
     return (
         <ContainerLogin>
+            <Container>
+            <h1>Tap</h1>
             <Form onSubmit={signupSubmit}>
+                <p>Registre-se para continuar</p>
                 <ContainerInput>
-                    <label htmlFor='name' >Name</label>
-                    <input type="text" id="name" required value={name} onChange={(e) => setName(e.target.value)}/>
+                    <input type="text" id="name" required value={name} onChange={(e) => setName(e.target.value)} placeholder='Digite o seu nome'/>
                 </ContainerInput>
                 <ContainerInput>
-                    <label htmlFor='email' >e-mail</label>
-                    <input type="email" id="email" required value={email} onChange={(e) => setEmail(e.target.value)}/>
+                    <input type="email" id="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder='Digite o seu email'/>
                 </ContainerInput>
                 <ContainerInput>
-                    <label htmlFor='password'>password</label>
-                    <input type="password" id="password" required value={password} onChange={(e) => setPassword(e.target.value)}/>
+                    <input type="password" id="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder='Digite a sua senha'/>
                 </ContainerInput>
-                <button type='submit'>Entrar</button>
+                <button type='submit'>Registrar</button>
             </Form>
             <ContainerSignupLink>
                 <p>Já possui uma conta? <Link to="/">Faça login aqui</Link></p>
             </ContainerSignupLink>
+            </Container>
         </ContainerLogin>
     )
 }
@@ -54,15 +55,36 @@ const ContainerLogin = styled.div`
     flex-direction: column;
     gap: 30px;
     margin-bottom: 200px;
+    background-color: rgb(250, 251, 252);
 `
 
 const ContainerSignupLink = styled.div`
+    margin-top: 20px;
     p {
         font-family: 'Rubik', sans-serif;
+        font-size: 14px;
+        text-align: center;
         a {
-            color: #703e27;
+            color: #0052cc;
         }
+    }
+`
 
+const Container = styled.div`
+    min-height: calc(100vh - 100px);
+    margin: 50px 0;
+    width: 400px;
+    padding: 32px 40px 32px 40px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 10px;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    h1 {
+        font-size: 30px;
+        font-family: 'Rubik', sans-serif;
+        font-weight: 600;
+        cursor: pointer;
+        text-align: center;
+        padding: 10px;
     }
 `
 
@@ -70,6 +92,8 @@ const ContainerInput = styled.div`
     display: flex;
     flex-direction: column;
     gap: 5px;
+    width: 100%;
+    padding: 4px;
 `
 
 const Form = styled.form`
@@ -77,35 +101,41 @@ const Form = styled.form`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 20px;
-    label {
+    padding-top: 20px;
+    width: 100%;
+    gap: 5px;
+
+    p {
         font-family: 'Rubik', sans-serif;
-        color: #281b15;
-        font-weight: 500;
+        color: rgb(23, 43, 77);
+        font-weight: 600;
+        margin-bottom: 10px;
     }
 
     input {
-        width: 240px;
+        width: 100%;
         height: 40px;
-        border-radius: 8px;
-        border: 1px solid #5f4133;
+        border-radius: 4px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
         padding-left: 10px;
         font-family: 'Rubik', sans-serif;
+        background-color: rgb(250, 251, 252);
+        font-weight: 200;
     }
 
     button {
-        width: 120px;
+        width: 100%;
         height: 40px;
         color: #ffffff;
-        font-weight: bold;
+        font-weight: 400;
         font-family: 'Rubik', sans-serif;
-        background-color: #5f4133;
+        background-color: #0052cc;
         border: none;
-        border-radius: 8px;
+        border-radius: 4px;
         cursor: pointer;
         transition: 200ms;
         &:hover {
-            background-color: #703e27;
+            background-color: #2066cf;
         }
     }
 `

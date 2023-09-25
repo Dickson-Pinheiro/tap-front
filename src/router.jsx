@@ -12,26 +12,16 @@ import CreateChecklist from "./pages/CreateChecklist";
 import EditChecklist from "./pages/EditChecklist";
 import Accordions from "./pages/Accordions";
 import Blocks from "./pages/Blocks";
+import Board from "./pages/Board";
 
 export default function Router(){
     return(
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<PrincipalPublic />} >
-                    <Route path="" element={<Login/>}/>
-                    <Route path="signup" element={<Signup />} />
-                </Route>
-                <Route path="/dash" element={<Principal />}>
-                    <Route path="/dash" element={<Dash/>} />
-                    <Route path="pages" element={<Blocks />} /> 
-                    <Route path="checklists" element={<Checklists />} />
-                    <Route path="checklists/create" element={<CreateChecklist />} />
-                    <Route path="checklists/edit/:id" element={<EditChecklist />} />
-                    <Route path="notes" element={<Notes />} />
-                    <Route path="notes/create" element={<Create />} />
-                    <Route path="notes/edit/:id" element={<Edit />} />
-                    <Route path="accordions" element={<Accordions/>} />
-                </Route>
+                <Route path="/" element={<Login/>}/>
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/dash" element={<Dash/>} />
+                <Route path="/board" element={<Board />} />
             </Routes>
         </BrowserRouter>
     )

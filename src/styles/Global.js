@@ -6,7 +6,7 @@ export const Global = createGlobalStyle`
    License: none (public domain)
 */
 .Toastify__toast-theme--dark {
-	background-color: #5f4133;;
+	background-color: #0052cc;
 }
 
 .Toastify__progress-bar {
