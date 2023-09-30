@@ -1,55 +1,250 @@
 import styled from "styled-components"
 import Header from "../components/Header"
-import { BsThreeDots } from "react-icons/bs"
-import { useState } from "react";
-import { DndContext, closestCenter } from "@dnd-kit/core";
+import { useMemo, useState } from "react";
+import { DndContext, DragOverlay, PointerSensor, closestCenter, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext, arrayMove, horizontalListSortingStrategy, useSortable } from "@dnd-kit/sortable";
 import {CSS} from '@dnd-kit/utilities';
 import SortableColumn from "../components/board/SortableColumn";
+import { createPortal } from "react-dom";
+import SortableCard from "../components/board/SortableCard";
+
+
+const initialCards = [
+    {
+        title: "Criar header das rotas não autenticadas",
+        id: 5,
+        columnId: 1
+    },
+    {
+        title: "Criar testes automatizados para validar entradas doca",
+        id: 6,
+        columnId: 1
+    },
+]
 
 const initialColumns = [
     {
         id: 1,
         title: "To do",
-        cards: [
-            {
-                title: "Criar header das rotas não autenticadas",
-                id: 1
-            },
-            {
-                title: "Criar testes automatizados para validar entradas doca",
-                id: 2
-            }
-        ]
     },
     {
         id: 2,
         title: "doing",
-        cards: []
     },
     {
         id: 3,
         title: "done",
-        cards: []
+    },
+    {
+        id: 4,
+        title: "arquivado",
     }
 ];
 
 
 export default function Board() {
-    const [columns, setColumns] = useState(initialColumns);
+    const [columns, setColumns] = useState([
+        {
+            id: 1,
+            title: "To do",
+            cards: [
+                {
+                    title: "Criar header das rotas não autenticadas",
+                    id: 5,
+                    columnId: 1
+                },
+                {
+                    title: "Criar testes automatizados para validar entradas doca",
+                    id: 6,
+                    columnId: 1
+                },
+            ]
+        },
+        {
+            id: 2,
+            title: "doing",
+            cards: [
+                {
+                    title: "Criar testes automatizados para validar entradas doca",
+                    id: 7,
+                    columnId: 2
+                },
+                {
+                    title: "Criar testes automatizados para validar entradas doca",
+                    id: 8,
+                    columnId: 2
+                },
+                {
+                    title: "Criar testes automatizados para validar entradas doca",
+                    id: 9,
+                    columnId: 2
+                },
+                {
+                    title: "Criar testes automatizados para validar entradas doca",
+                    id: 10,
+                    columnId: 2
+                },
+                {
+                    title: "Criar testes automatizados para validar entradas doca",
+                    id: 11,
+                    columnId: 2
+                },
+                {
+                    title: "Criar testes automatizados para validar entradas doca",
+                    id: 12,
+                    columnId: 2
+                },
+                {
+                    title: "Criar testes automatizados para validar entradas doca",
+                    id: 13,
+                    columnId: 2
+                },
+                {
+                    title: "Criar testes automatizados para validar entradas doca",
+                    id: 14,
+                    columnId: 2
+                },
+            ]
+        },
+        {
+            id: 3,
+            title: "done",
+            cards: []
+        },
+        {
+            id: 4,
+            title: "arquivado",
+            cards: []
+        }
+    ]);
+
+    const columnsId = useMemo(() => columns.map(col => col.id), [columns])
+    const [activeColumn, setActiveColumn] = useState(null);
+    const [activeCard, setActiveCard] = useState(null);
+    const sensor = useSensors(useSensor(PointerSensor, {
+        activationConstraint: {
+            distance: 3,
+        }
+    }))
 
     const onDragEnd = event => {
-        console.log(event);
+        setActiveCard(null)
+        setActiveColumn(null)
+        console.log(columns)
         const {active, over} = event;
-        if(active.id === over.id){
+        if(active?.id === over?.id){
             return
         }
 
-        setColumns(columns => {
-            const oldIndex = columns.findIndex(column => column.id === active.id)
-            const newIndex = columns.findIndex(column => column.id === over.id)
-            return arrayMove(columns, oldIndex, newIndex)
-        })
+        if(event.active.data.current.type === "Column"){
+            setColumns(columns => {
+                const oldIndex = columns.findIndex(column => column.id === active.id)
+                const newIndex = columns.findIndex(column => column.id === over.id)
+                const columnsCopy = JSON.parse(JSON.stringify(columns));
+    
+                const newColumns = arrayMove(columnsCopy, oldIndex, newIndex)
+                console.log(newColumns);
+                return newColumns
+            })
+        }
+    }
+
+    function onDragStart(event) {
+       
+        if(event.active.data.current?.type === "Column"){
+            setActiveColumn(event.active.data.current.column)
+        }
+        if(event.active.data.current.type === "Card"){
+            setActiveCard(event.active.data.current.card)
+        }
+    }
+
+    function onDragOver(event){
+        const {active, over} = event;
+        console.log('ativou')
+        if(!over) return;
+
+        const activeId = active.id
+        const overId = over.id
+
+        if(activeId === overId){
+            return
+        }
+
+        const isActiveACard = active.data.current.type === "Card"
+        const isOverACard = over.data.current.type === "Card"
+
+        if(isActiveACard && isOverACard){
+            const activeCard = active.data.current.card
+            const overCard = over.data.current.card
+            const activeCardColumnIndex = columns.findIndex(c => c.id === activeCard.columnId)
+            const overCardColumnIndex = columns.findIndex(c => c.id === overCard.columnId)
+
+            const activeCardIndex = columns[activeCardColumnIndex].cards.findIndex(c => c.id === activeCard.id)
+            const overCardIndex =  columns[overCardColumnIndex].cards.findIndex(c => c.id === overCard.id)
+            console.log(activeCardColumnIndex)
+            if(activeCardColumnIndex !== overCardColumnIndex){
+                const newColumns = JSON.parse(JSON.stringify(columns));
+                const [removedCard] = newColumns[activeCardColumnIndex].cards.splice(activeCardIndex, 1)
+                console.log(overCardIndex)
+                newColumns[overCardColumnIndex].cards.splice(overCardIndex, 0, {...removedCard, columnId: overCard.columnId});
+                setColumns([...JSON.parse(JSON.stringify(newColumns))])
+            }
+        }
+        if(active.data.current.type === "Card" && over.data.current.type === "Column"){
+            if(active.data.current.card.columnId === over.data.current.column.id){
+                return
+            }
+            const activeCard = active.data.current.card
+            const overColumn = over.data.current.column
+
+            const overColumnIndex = columns.findIndex(c => c.id === overColumn.id)
+            const activeCardOriginColumnIndex = columns.findIndex(c => c.id === activeCard.columnId)
+            const activeCardIndex = columns[activeCardOriginColumnIndex].cards.findIndex(c => c.id === activeCard.id)
+
+            const newColumns = JSON.parse(JSON.stringify(columns));
+            const [removedCard] = newColumns[activeCardOriginColumnIndex].cards.splice(activeCardIndex, 1);
+            newColumns[overColumnIndex].cards.push({...removedCard, columnId: overColumn.id})
+            setColumns(newColumns)
+        }
+    }
+
+    function onDragMove(event){
+        const {active, over} = event;
+
+        if(!over) return;
+
+        const activeId = active.id
+        const overId = over.id
+
+        if(activeId === overId){
+            return
+        }
+
+        const isActiveACard = active.data.current.type === "Card"
+        const isOverACard = over.data.current.type === "Card"
+
+        if(isActiveACard && isOverACard){
+            const activeCard = active.data.current.card
+            const overCard = over.data.current.card
+            const activeCardColumnIndex = columns.findIndex(c => c.id === activeCard.columnId)
+            const overCardColumnIndex = columns.findIndex(c => c.id === overCard.columnId)
+            
+            const activeCardIndex = columns[activeCardColumnIndex].cards.findIndex(c => c.id === activeCard.id)
+            const overCardIndex =  columns[overCardColumnIndex].cards.findIndex(c => c.id === overCard.id)
+
+            if(activeCardColumnIndex === overCardColumnIndex){
+                const newColumns = JSON.parse(JSON.stringify(columns));
+                newColumns[activeCardColumnIndex].cards = arrayMove(
+                    newColumns[activeCardColumnIndex].cards,
+                    activeCardIndex,
+                    overCardIndex
+                )
+
+                setColumns([...newColumns])
+                return
+            }
+        }
     }
 
     return (
@@ -68,20 +263,30 @@ export default function Board() {
                             <h1>Glow - Campanha de Lançamento</h1>
                         </Left>
                     </HeaderColumns>
+                    <div>
+                    <DndContext sensors={sensor} onDragStart={onDragStart} onDragMove={onDragMove} onDragOver={onDragOver} onDragEnd={onDragEnd} collisionDetection={closestCenter}>
                     <ColumnsContainer>
-                        <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
-                            <SortableContext items={columns} strategy={horizontalListSortingStrategy}>
+                            <SortableContext items={columnsId}>
                                 {columns.map(column => (
-                                    <SortableColumn column={column} key={column.id}/>
+                                    <SortableColumn column={column} cards={column.cards} key={column.id} />
                                 ))}
                             </SortableContext>
-                        </DndContext>
                     </ColumnsContainer>
+                    {createPortal(<DragOverlay>
+                        {activeColumn && (<SortableColumn column={activeColumn} cards={activeColumn.cards}/>)}
+                        {activeCard && <SortableCard card={activeCard} />}
+                    </DragOverlay>, document.body)
+                    }
+                    </DndContext>
+                    </div>
                 </ColumsData>
+                
             </Container>
         </BoardContainer>
     )
 }
+
+
 
 const BoardContainer = styled.div`
     width: 100%;
@@ -91,7 +296,8 @@ const BoardContainer = styled.div`
 
 const Container = styled.div`
     display: flex;
-    height: calc(100vh - 49px);
+    min-height: calc(100vh - 49px);
+    height: 100%;
 `
 
 const WorkspaceData = styled.div`
@@ -145,7 +351,7 @@ const ColumnsContainer = styled.div`
     width: 100%;
     flex: 1;
     padding: 12px;
-    display: flex;
+    display: flex;;
     gap: 12px;
     overflow: hidden;
     overflow-x: auto;

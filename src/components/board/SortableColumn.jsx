@@ -4,29 +4,25 @@ import { CSS } from "@dnd-kit/utilities"
 import { BsThreeDots } from "react-icons/bs"
 import styled from "styled-components"
 import SortableCard from "./SortableCard"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 
-export default function SortableColumn({ column }) {
-    const [cards, setCards] = useState(column.cards)
-    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: column.id })
+export default function SortableColumn({ column, cards }) {
+
+    const cardsId = useMemo(() => cards.map(c => c.id), [column])
+
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: column.id, data: {
+        type: "Column",
+        column: JSON.parse(JSON.stringify(column))
+    } })
     const style = {
         transition,
         transform: CSS.Transform.toString(transform),
     }
 
-
-    const onDragEnd = event => {
-        console.log(event);
-        const {active, over} = event;
-        if(active.id === over.id){
-            return
-        }
-
-        setCards(cards => {
-            const oldIndex = cards.findIndex(column => column.id === active.id)
-            const newIndex = cards.findIndex(column => column.id === over.id)
-            return arrayMove(cards, oldIndex, newIndex)
-        })
+    
+    if(isDragging){
+        return <ColumnOverlay ref={setNodeRef} style={style}>
+        </ColumnOverlay>
     }
 
     return (
@@ -36,13 +32,11 @@ export default function SortableColumn({ column }) {
                 <BsThreeDots />
             </ColumnHeader>
             <ColumnContent>
-                <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
-                    <SortableContext items={cards} strategy={verticalListSortingStrategy}>
-                        {cards.map(card => (
-                            <SortableCard card={card} key={card.id}/>
-                        ))}
+                    <SortableContext items={cardsId}>
+                        {cards.map(card => {
+                           return <SortableCard card={card} key={card.id}/>
+                        })}
                     </SortableContext>
-                </DndContext>
             </ColumnContent>
             <AddCard>
                 <p>+ adicionar um cartão</p>
@@ -55,14 +49,24 @@ const Column = styled.div`
     box-sizing: border-box;
     min-width: 272px;
     max-width: 272px;
-    height: fit-content;
-    overflow-x: none;
-    max-height: calc(100% - 20px);
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    max-height: 600px;
     background-color: #ebecf0;
     border-radius: 12px;
     padding: 5px;
     padding-left: 8px;
     box-shadow: 0 1px 1px #091e4240,0 0 1px #091e424f;
+`
+
+const ColumnOverlay = styled.div`
+    min-width: 272px;
+    max-width: 272px;
+    height: 600px;
+    border-radius: 12px;
+    background-color: #ebecf0;
+    opacity: 0.7;
 `
 
 const ColumnHeader = styled.div`
@@ -84,12 +88,12 @@ const ColumnHeader = styled.div`
 const ColumnContent = styled.div`
     display: flex;
     flex-direction: column;
-    height: fit-content;
+    flex: 1;
     padding-bottom: 8px;
     padding-right: 4px;
     max-height: calc(100vh - 270px);
-    overflow: hidden;
     overflow-x: none;
+    overflow-x: hidden;
     overflow-y: auto;
     gap: 8px;
     &::-webkit-scrollbar {
@@ -107,7 +111,6 @@ const ColumnContent = styled.div`
 const AddCard = styled.div`
     width: 100%;
     padding: 10px;
-    margin-top: 4px;
     cursor: pointer;
     p {
         color: #172b4d;
