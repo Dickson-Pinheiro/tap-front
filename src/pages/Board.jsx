@@ -23,27 +23,6 @@ const initialCards = [
 ]
 
 const initialColumns = [
-    {
-        id: 1,
-        title: "To do",
-    },
-    {
-        id: 2,
-        title: "doing",
-    },
-    {
-        id: 3,
-        title: "done",
-    },
-    {
-        id: 4,
-        title: "arquivado",
-    }
-];
-
-
-export default function Board() {
-    const [columns, setColumns] = useState([
         {
             id: 1,
             title: "To do",
@@ -116,7 +95,11 @@ export default function Board() {
             title: "arquivado",
             cards: []
         }
-    ]);
+    ]
+
+
+export default function Board() {
+    const [columns, setColumns] = useState(initialColumns);
 
     const columnsId = useMemo(() => columns.map(col => col.id), [columns])
     const [activeColumn, setActiveColumn] = useState(null);
@@ -190,6 +173,17 @@ export default function Board() {
                 newColumns[overCardColumnIndex].cards.splice(overCardIndex, 0, {...removedCard, columnId: overCard.columnId});
                 setColumns([...JSON.parse(JSON.stringify(newColumns))])
             }
+            if(activeCardColumnIndex === overCardColumnIndex){
+                const newColumns = JSON.parse(JSON.stringify(columns));
+                newColumns[activeCardColumnIndex].cards = arrayMove(
+                    newColumns[activeCardColumnIndex].cards,
+                    activeCardIndex,
+                    overCardIndex
+                )
+    
+                setColumns([...newColumns])
+                return
+            }
         }
         if(active.data.current.type === "Card" && over.data.current.type === "Column"){
             if(active.data.current.card.columnId === over.data.current.column.id){
@@ -209,43 +203,6 @@ export default function Board() {
         }
     }
 
-    function onDragMove(event){
-        const {active, over} = event;
-
-        if(!over) return;
-
-        const activeId = active.id
-        const overId = over.id
-
-        if(activeId === overId){
-            return
-        }
-
-        const isActiveACard = active.data.current.type === "Card"
-        const isOverACard = over.data.current.type === "Card"
-
-        if(isActiveACard && isOverACard){
-            const activeCard = active.data.current.card
-            const overCard = over.data.current.card
-            const activeCardColumnIndex = columns.findIndex(c => c.id === activeCard.columnId)
-            const overCardColumnIndex = columns.findIndex(c => c.id === overCard.columnId)
-            
-            const activeCardIndex = columns[activeCardColumnIndex].cards.findIndex(c => c.id === activeCard.id)
-            const overCardIndex =  columns[overCardColumnIndex].cards.findIndex(c => c.id === overCard.id)
-
-            if(activeCardColumnIndex === overCardColumnIndex){
-                const newColumns = JSON.parse(JSON.stringify(columns));
-                newColumns[activeCardColumnIndex].cards = arrayMove(
-                    newColumns[activeCardColumnIndex].cards,
-                    activeCardIndex,
-                    overCardIndex
-                )
-
-                setColumns([...newColumns])
-                return
-            }
-        }
-    }
 
     return (
         <BoardContainer>
@@ -264,7 +221,7 @@ export default function Board() {
                         </Left>
                     </HeaderColumns>
                     <div>
-                    <DndContext sensors={sensor} onDragStart={onDragStart} onDragMove={onDragMove} onDragOver={onDragOver} onDragEnd={onDragEnd} collisionDetection={closestCenter}>
+                    <DndContext sensors={sensor} onDragStart={onDragStart} onDragOver={onDragOver} onDragEnd={onDragEnd} collisionDetection={closestCenter}>
                     <ColumnsContainer>
                             <SortableContext items={columnsId}>
                                 {columns.map(column => (

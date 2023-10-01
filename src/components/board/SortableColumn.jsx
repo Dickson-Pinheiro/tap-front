@@ -22,6 +22,17 @@ export default function SortableColumn({ column, cards }) {
     
     if(isDragging){
         return <ColumnOverlay ref={setNodeRef} style={style}>
+            <ColumnHeader>
+            <h3>{column.title}</h3>
+            </ColumnHeader>
+            <ColumnContent>
+                {cards.map(card => {
+                    return <SortableCard card={card} key={card.id}/>
+                })}
+            </ColumnContent>
+            <AddCard>
+                <p>+ adicionar um cartão</p>
+            </AddCard>
         </ColumnOverlay>
     }
 
@@ -53,11 +64,7 @@ const Column = styled.div`
     display: flex;
     flex-direction: column;
     max-height: 600px;
-    background-color: #ebecf0;
     border-radius: 12px;
-    padding: 5px;
-    padding-left: 8px;
-    box-shadow: 0 1px 1px #091e4240,0 0 1px #091e424f;
 `
 
 const ColumnOverlay = styled.div`
@@ -65,16 +72,18 @@ const ColumnOverlay = styled.div`
     max-width: 272px;
     height: 600px;
     border-radius: 12px;
-    background-color: #ebecf0;
     opacity: 0.7;
 `
 
 const ColumnHeader = styled.div`
     display: flex;
     padding-top: 12px;
-    padding-left: 12px;
-    padding-right: 12px;
-    margin-bottom: 12px;
+    padding-left: 18px;
+    padding-right: 18px;
+    padding-bottom: 10px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    background-color: #ebecf0;
     justify-content: space-between;
     h3 {
         font-family: 'Lora', serif;
@@ -88,9 +97,10 @@ const ColumnHeader = styled.div`
 const ColumnContent = styled.div`
     display: flex;
     flex-direction: column;
-    flex: 1;
     padding-bottom: 8px;
-    padding-right: 4px;
+    padding: 8px;
+    background-color: #ebecf0;
+    height: fit-content;
     max-height: calc(100vh - 270px);
     overflow-x: none;
     overflow-x: hidden;
@@ -98,6 +108,7 @@ const ColumnContent = styled.div`
     gap: 8px;
     &::-webkit-scrollbar {
         width: 8px;
+        padding-right: 2px;
     }
     &::-webkit-scrollbar-track {
         background: transparent;
@@ -110,9 +121,14 @@ const ColumnContent = styled.div`
 
 const AddCard = styled.div`
     width: 100%;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
     padding: 10px;
+    background-color: #ebecf0;
     cursor: pointer;
     p {
         color: #172b4d;
     }
 `
+
+/*box-shadow: 0 1px 1px #091e4240,0 0 1px #091e424f;*/
