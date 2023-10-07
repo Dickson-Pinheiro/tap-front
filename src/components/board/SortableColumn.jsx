@@ -1,10 +1,9 @@
-import { DndContext, closestCenter } from "@dnd-kit/core"
-import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable"
+import { SortableContext, useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { BsThreeDots } from "react-icons/bs"
 import styled from "styled-components"
 import SortableCard from "./SortableCard"
-import { useMemo, useState } from "react"
+import { useMemo } from "react"
 
 export default function SortableColumn({ column, cards }) {
 
